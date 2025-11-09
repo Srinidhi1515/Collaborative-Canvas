@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Collaborative Canvas</title>
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- 🌌 Header Section -->
+  <header>
+    <div class="logo">
+      <h1>🎨 Collaborative Canvas</h1>
+    </div>
+
+    <div id="toolbar">
+      <label>Tool:
+        <select id="tool">
+          <option value="brush">Brush</option>
+          <option value="eraser">Eraser</option>
+          <option value="line">Line</option>
+          <option value="rectangle">Rectangle</option>
+          <option value="square">Square</option>
+          <option value="circle">Circle</option>
+          <option value="oval">Oval</option>
+          <option value="hexagon">Hexagon</option>
+          <option value="fill">🪣 Fill</option>
+        </select>
+      </label>
+
+      <label>Color:
+        <input id="color" type="color" value="#007bff">
+        <div id="colorPreview"></div>
+      </label>
+
+      <label>Width:
+        <input id="width" type="range" min="1" max="50" value="5">
+      </label>
+
+      <button id="pickColor">🎯 Pick</button>
+      <button id="eraseAll">💧 Erase All</button>
+      <button id="undo">↩️ Undo</button>
+      <button id="redo">↪️ Redo</button>
+
+      <span id="users">👥 0</span>
+    </div>
+  </header>
+
+  <!-- 🖌️ Canvas Area -->
+  <canvas id="canvas"></canvas>
+  <div id="wipe"></div>
+  <div id="cursors"></div>
+
+  <!-- 💬 Footer -->
+  <footer>
+    <p>Made with 💙</p>
+  </footer>
+
+  <!-- 🔌 Scripts -->
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="canvas.js"></script>
+  <script src="websocket.js"></script>
+  <script src="main.js"></script>
+
+  <!-- 💧 Erase All + Color Preview Logic -->
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const colorInput = document.getElementById("color");
+      const colorPreview = document.getElementById("colorPreview");
+      const eraseAll = document.getElementById("eraseAll");
+
+      // 🎨 Update color preview bubble
+      colorInput.addEventListener("input", e => {
+        const color = e.target.value;
+        colorPreview.style.background = color;
+        if (window.cm) cm.setColor(color);
+      });
+
+      // 💧 Erase All with wave effect
+      eraseAll.addEventListener("click", () => {
+        const wipe = document.getElementById("wipe");
+        wipe.classList.remove("wipe-active");
+        void wipe.offsetWidth; // force reflow
+        wipe.classList.add("wipe-active");
+
+        // Clear the canvas after animation
+        setTimeout(() => {
+          if (window.cm) {
+            cm.strokes = [];
+            cm.ctx.clearRect(0, 0, cm.canvas.width, cm.canvas.height);
+            cm.redraw();
+          }
+        }, 1000);
+      });
+    });
+  </script>
+</body>
+</html>
