@@ -36,8 +36,3 @@ A **web-based collaborative drawing platform** that allows multiple users to dra
 ## 🧠 Built Using
 HTML, CSS, JavaScript (Canvas API), Node.js, Express, and Socket.io  
 
----
-
-## 👑 Author
-**Naga Srinidhi Doddapaneni**  
-Built with 💙 using creativity, Canvas, and code!
